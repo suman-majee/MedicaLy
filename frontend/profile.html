@@ -8,12 +8,12 @@
   <link rel="icon" href="assets/bot.png" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <link rel="stylesheet" href="profile.css?v=4" />
+  <link rel="stylesheet" href="profile.css" />
 </head>
 <body>
 <div class="profile-page">
 
-  <!-- Top Bar -->
+  <!-- ===================== HEADER ===================== -->
   <div class="profile-topbar">
     <div class="logo-area">
       <img src="assets/logo.png" alt="MedicaLy" class="logo" />
@@ -25,54 +25,74 @@
     </nav>
   </div>
 
+  <!-- ===================== DOCTOR STATS BAR (Doctors only, full-width) ===================== -->
+  <div id="doctor-stats-card" class="doctor-stats-bar" style="display:none;">
+    <div class="stats-bar-container">
+      <div class="stat-box">
+        <span id="stat-patients" class="stat-number">—</span>
+        <span class="stat-label">Total Patients</span>
+      </div>
+      <div class="stat-box">
+        <span id="stat-pending" class="stat-number pending">—</span>
+        <span class="stat-label">Pending Appointments</span>
+      </div>
+      <div class="stat-box">
+        <span id="stat-rating" class="stat-number rating">—</span>
+        <span class="stat-label">Average Rating</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Reminder Banner (patient upcoming appointment — injected by JS) -->
-  <div id="reminder-banner" style="display:none; padding: 0 28px; max-width:1200px; margin:16px auto 0; width:100%;"></div>
+  <div id="reminder-banner" style="display:none; max-width:1200px; margin:24px auto 0; padding:0 32px; width:100%;"></div>
 
   <!-- Status message (form save result) -->
-  <div style="max-width:1200px; margin:0 auto; padding:0 28px; width:100%;">
+  <div style="max-width:1200px; margin:0 auto; padding:0 32px; width:100%;">
     <div id="status-msg" class="status-msg"></div>
   </div>
 
+  <!-- ===================== MAIN SECTION GRID ===================== -->
   <div class="profile-body">
 
-    <!-- ===================== SIDEBAR ===================== -->
+    <!-- ===================== LEFT SIDEBAR ===================== -->
     <aside class="profile-sidebar">
-      <!-- Avatar + Info Card -->
-      <div class="sidebar-card">
-        <div id="sidebar-avatar" class="avatar-circle patient">?</div>
+      <!-- Avatar initials (JS populated) -->
+      <div id="sidebar-avatar" class="avatar-circle patient">?</div>
+      
+      <!-- Name and Role (helpful vertical alignment) -->
+      <div class="sidebar-name-role">
         <div id="sidebar-name" class="sidebar-name">Loading...</div>
-        <div id="sidebar-role-badge" class="role-badge patient">Patient</div>
-        <div id="sidebar-email" class="sidebar-email"></div>
-        <div id="sidebar-pills" class="sidebar-pills"></div>
-      </div>
-
-      <!-- Doctor Stats Card (doctors only, hidden by default) -->
-      <div id="doctor-stats-card" class="stats-card" style="display:none;">
-        <div class="stats-title">📊 Practice Overview</div>
-        <div class="stats-grid">
-          <div class="stat-item">
-            <span id="stat-patients" class="stat-number">—</span>
-            <span class="stat-label">Total Patients</span>
-          </div>
-          <div class="stat-item">
-            <span id="stat-pending" class="stat-number pending">—</span>
-            <span class="stat-label">Pending</span>
-          </div>
-          <div class="stat-item">
-            <span id="stat-rating" class="stat-number rating">—</span>
-            <span class="stat-label">Avg Rating</span>
-          </div>
+        <div style="display: flex; justify-content: center;">
+          <div id="sidebar-role-badge" class="role-badge patient">Patient</div>
         </div>
+      </div>
+      
+      <!-- Email (JS populated) -->
+      <div id="sidebar-email" class="sidebar-email"></div>
+      
+      <div class="sidebar-divider"></div>
+      
+      <!-- Quick Info Pills (JS populated) -->
+      <div id="sidebar-pills" class="sidebar-pills"></div>
+      
+      <div class="sidebar-divider"></div>
+
+      <!-- Sidebar Navigation Link Scroll Shortcuts -->
+      <div class="sidebar-nav">
+        <a class="sidebar-nav-link active" onclick="scrollToSection('account-section')">Edit Profile</a>
+        <a class="sidebar-nav-link" onclick="scrollToSection('appointments-section')">My Appointments</a>
+        <a class="sidebar-nav-link" id="nav-prescriptions" onclick="scrollToSection('prescriptions-section')" style="display:none;">My Prescriptions</a>
+        <a class="sidebar-nav-link" id="nav-reviews" onclick="scrollToSection('reviews-section')" style="display:none;">Patient Reviews</a>
       </div>
     </aside>
 
-    <!-- ===================== CONTENT ===================== -->
+    <!-- ===================== RIGHT CONTENT AREA ===================== -->
     <main class="profile-content">
 
       <form id="profile-form">
 
         <!-- ---- CARD 1: Account Information (both roles) ---- -->
-        <div class="profile-card">
+        <div id="account-section" class="profile-card">
           <div class="card-title">Account Information</div>
           <div class="form-grid-2">
             <div class="form-group">
@@ -88,7 +108,7 @@
               <input type="email" id="p-email" class="readonly" readonly placeholder="your@email.com" />
             </div>
             <div class="form-group">
-              <label>Account Role</label>
+              <label>Account Role <span class="lock-icon">🔒</span></label>
               <input type="text" id="p-role" class="readonly" readonly />
             </div>
           </div>
@@ -134,14 +154,17 @@
               <div class="form-group">
                 <label>Known Allergies</label>
                 <input type="text" id="p-allergies" placeholder="e.g. Penicillin, Peanuts" />
+                <span class="input-helper">e.g. Penicillin, Pollen, Peanuts</span>
               </div>
               <div class="form-group">
                 <label>Chronic Conditions</label>
                 <input type="text" id="p-chronic" placeholder="e.g. Diabetes, Hypertension" />
+                <span class="input-helper">e.g. Diabetes, Hypertension</span>
               </div>
               <div class="form-group">
                 <label>Current Medications</label>
                 <input type="text" id="p-medications" placeholder="e.g. Metformin 500mg" />
+                <span class="input-helper">e.g. Metformin 500mg daily</span>
               </div>
             </div>
           </div>
@@ -177,10 +200,6 @@
                 <input type="text" id="p-speciality" placeholder="e.g. Cardiologist" />
               </div>
               <div class="form-group">
-                <label>Medical Licence # <span class="lock-icon">🔒</span></label>
-                <input type="text" id="p-licence" class="readonly" readonly placeholder="Locked" />
-              </div>
-              <div class="form-group">
                 <label>Experience (Years)</label>
                 <input type="number" id="p-experience" placeholder="0" min="0" max="60" />
               </div>
@@ -188,12 +207,16 @@
                 <label>Qualification</label>
                 <input type="text" id="p-qualification" placeholder="e.g. MBBS, MD" />
               </div>
+              <div class="form-group span-2">
+                <label>Medical Licence # <span class="lock-icon" title="Cannot be changed after registration">🔒 (Cannot be changed after registration)</span></label>
+                <input type="text" id="p-licence" class="readonly" readonly placeholder="Locked" title="Cannot be changed after registration" />
+              </div>
             </div>
           </div>
 
-          <!-- Card 3: Clinic Information -->
+          <!-- Card 3: Clinic & Availability -->
           <div class="profile-card">
-            <div class="card-title">Clinic Information</div>
+            <div class="card-title">Clinic & Availability</div>
             <div class="form-grid-2">
               <div class="form-group">
                 <label>Clinic Name</label>
@@ -205,28 +228,30 @@
               </div>
               <div class="form-group span-2">
                 <label>Clinic Address</label>
-                <div class="input-with-btn">
-                  <input type="text" id="p-clinic-address" placeholder="Full clinic address" />
-                  <button type="button" class="map-btn" onclick="geocodeAddress()">📍 Point on Map</button>
-                </div>
+                <input type="text" id="p-clinic-address" placeholder="Full clinic address" />
               </div>
+              
               <div class="form-group span-2">
                 <label>Available Days <span style="font-size:0.7rem; color:#888; text-transform:none; font-weight:400;">(click to toggle)</span></label>
                 <div class="day-toggles" id="day-toggles">
+                  <button type="button" class="day-toggle" data-day="Sun">Sun</button>
                   <button type="button" class="day-toggle" data-day="Mon">Mon</button>
                   <button type="button" class="day-toggle" data-day="Tue">Tue</button>
                   <button type="button" class="day-toggle" data-day="Wed">Wed</button>
                   <button type="button" class="day-toggle" data-day="Thu">Thu</button>
                   <button type="button" class="day-toggle" data-day="Fri">Fri</button>
                   <button type="button" class="day-toggle" data-day="Sat">Sat</button>
-                  <button type="button" class="day-toggle" data-day="Sun">Sun</button>
                 </div>
                 <input type="hidden" id="p-days" />
               </div>
+              
               <div class="form-group span-2">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                  <label style="margin-bottom:0;">Clinic Location Pin</label>
-                  <button type="button" class="map-btn" style="padding:4px 12px; font-size:0.78rem;" onclick="detectMyLocation()">📡 Detect My Location</button>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                  <label style="margin-bottom:0;">Clinic Address for Map</label>
+                  <div style="display:flex; gap:8px;">
+                    <button type="button" class="map-btn" style="padding:4px 12px; font-size:0.78rem;" onclick="detectMyLocation()">📍 Detect Location</button>
+                    <button type="button" class="map-btn" style="padding:4px 12px; font-size:0.78rem;" onclick="geocodeAddress()">🔍 Find on Map</button>
+                  </div>
                 </div>
                 <div id="profile-map"></div>
                 <input type="hidden" id="lat" /><input type="hidden" id="lng" />
@@ -239,7 +264,7 @@
             <div class="card-title">About</div>
             <div class="form-group">
               <label>Short Bio</label>
-              <textarea id="p-bio" rows="4" placeholder="Tell patients about your background, areas of expertise, and approach to care..."></textarea>
+              <textarea id="p-bio" rows="5" placeholder="Write a short professional bio visible to patients..."></textarea>
             </div>
           </div>
 
@@ -247,7 +272,7 @@
 
       </form><!-- end profile-form -->
 
-      <!-- Save Button (outside cards) -->
+      <!-- Save Button (fixed wrapper bottom-right) -->
       <div class="save-btn-wrap">
         <button type="submit" form="profile-form" class="save-btn" id="save-btn">Update Profile</button>
       </div>
@@ -255,18 +280,51 @@
       <!-- ============================================
            CARD 5: My Appointments (both roles)
            ============================================ -->
-      <div class="profile-card">
+      <div id="appointments-section" class="profile-card">
         <div class="card-title">My Appointments</div>
         <div id="appointments-list" class="appointments-list">
           <div class="empty-state">Loading appointments...</div>
         </div>
       </div>
 
-      <!-- My Prescriptions Section (Patients Only) -->
+      <!-- ============================================
+           CARD 6: My Prescriptions (Patients Only)
+           ============================================ -->
       <div id="patient-prescriptions-section" style="display:none;">
-        <div class="profile-card">
+        <div id="prescriptions-section" class="profile-card">
           <div class="card-title">My Prescriptions</div>
           <div id="prescriptions-list" class="appointments-list"></div>
+        </div>
+      </div>
+
+      <!-- ============================================
+           CARD 6: Patient Reviews (Doctors Only)
+           ============================================ -->
+      <div id="reviews-section-wrapper" class="doctor-only-reviews" style="display:none;">
+        <div id="reviews-section" class="profile-card">
+          <div class="card-title">Patient Reviews</div>
+          <div class="reviews-summary">
+            <div class="big-rating">⭐ 4.8 <span style="font-size: 16px; color:#64748b; font-weight:500;">/ 5</span></div>
+            <div class="rating-meta">Based on 12 verified patient appointments</div>
+          </div>
+          <div class="review-list">
+            <div class="review-item">
+              <div class="review-user-header">
+                <span class="review-user-name">Amit Sharma</span>
+                <span class="review-stars">⭐⭐⭐⭐⭐</span>
+              </div>
+              <p class="review-comment">Excellent consultation! Dr. Roy is extremely patient and explained the diagnosis very clearly.</p>
+              <div class="review-date">May 18, 2026</div>
+            </div>
+            <div class="review-item">
+              <div class="review-user-header">
+                <span class="review-user-name">Sneha Gupta</span>
+                <span class="review-stars">⭐⭐⭐⭐</span>
+              </div>
+              <p class="review-comment">Very professional. The clinic was clean and the waiting time was minimal.</p>
+              <div class="review-date">May 12, 2026</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -275,6 +333,65 @@
 </div>
 
 <script src="notifications.js"></script>
-<script src="profile.js?v=4"></script>
+<script src="profile.js"></script>
+
+<!-- Inline scroll and interactive behavior synchronization script (JS-compatible) -->
+<script>
+  // Smooth scroll shortcut handler
+  function scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      
+      // Update active link styling
+      document.querySelectorAll('.sidebar-nav-link').forEach(link => {
+        link.classList.remove('active');
+      });
+      event.currentTarget.classList.add('active');
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // 1. Observer for saving status message -> button feedback
+    const statusMsg = document.getElementById("status-msg");
+    const saveBtn = document.getElementById("save-btn");
+    
+    if (statusMsg && saveBtn) {
+      const observer = new MutationObserver(() => {
+        if (statusMsg.classList.contains("success")) {
+          const originalText = saveBtn.innerText;
+          saveBtn.innerText = "✅ Profile Updated";
+          saveBtn.classList.add("success-state");
+          
+          setTimeout(() => {
+            saveBtn.innerText = originalText;
+            saveBtn.classList.remove("success-state");
+          }, 2000);
+        }
+      });
+      observer.observe(statusMsg, { attributes: true, attributeFilter: ["class"] });
+    }
+
+    // 2. Hide/show role-based elements not controlled by profile.js
+    setInterval(() => {
+      const isPatient = document.getElementById("p-patient-section").style.display === "block";
+      const isDoctor = document.getElementById("p-doctor-section").style.display === "block";
+      
+      const navPrescriptions = document.getElementById("nav-prescriptions");
+      const navReviews = document.getElementById("nav-reviews");
+      const reviewsSectionWrapper = document.getElementById("reviews-section-wrapper");
+      
+      if (isPatient) {
+        if (navPrescriptions) navPrescriptions.style.display = "flex";
+        if (navReviews) navReviews.style.display = "none";
+        if (reviewsSectionWrapper) reviewsSectionWrapper.style.display = "none";
+      } else if (isDoctor) {
+        if (navPrescriptions) navPrescriptions.style.display = "none";
+        if (navReviews) navReviews.style.display = "flex";
+        if (reviewsSectionWrapper) reviewsSectionWrapper.style.display = "block";
+      }
+    }, 400);
+  });
+</script>
 </body>
 </html>
