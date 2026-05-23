@@ -446,7 +446,7 @@ async function handleBookingSubmit(e) {
          alert("❌ " + (data.message || "Failed to book appointment."));
       }
    } catch (err) {
-      alert("Error connecting to server: " + err.message);
+      // alert("Error connecting to server: " + err.message);
    } finally {
       btn.disabled = false;
       btn.textContent = "Confirm Booking";
