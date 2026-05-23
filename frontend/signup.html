@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedicaLy - Sign Up</title>
+  <link rel="stylesheet" href="style.css?v=3" />
+  <link rel="icon" href="assets/bot.png" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box signup-box">
+      <div class="login-header">
+        <img src="assets/logo.png" alt="MedMatch AI" class="logo" />
+        <h2>Join MedicaLy</h2>
+        <p>Create a new account</p>
+      </div>
+      
+      <div class="login-tabs">
+        <button class="tab-btn active" onclick="switchSignupTab('patient')">Patient</button>
+        <button class="tab-btn" onclick="switchSignupTab('doctor')">Doctor</button>
+      </div>
+
+      <form id="signup-form" class="login-form">
+        <!-- Common Fields -->
+        <div class="input-row">
+            <div class="input-group">
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" placeholder="Enter your full name" required />
+            </div>
+            <div class="input-group">
+                <label for="phone">Phone Number *</label>
+                <input type="tel" id="phone" placeholder="Contact number" required />
+            </div>
+        </div>
+        <div class="input-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" placeholder="Enter your email" required />
+        </div>
+        <div class="input-group">
+          <label for="password">Password *</label>
+          <input type="password" id="password" placeholder="Create a password" required />
+        </div>
+        
+        <!-- Patient Specific Fields -->
+        <div id="patient-fields">
+          <div class="input-row">
+            <div class="input-group">
+              <label for="dob">Date of Birth *</label>
+              <input type="date" id="dob" required />
+            </div>
+            <div class="input-group">
+              <label for="gender">Gender *</label>
+              <select id="gender" required>
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="input-row">
+              <div class="input-group">
+                  <label for="blood_group">Blood Group</label>
+                  <input type="text" id="blood_group" placeholder="e.g. O+" />
+              </div>
+              <div class="input-group">
+                <label for="city">City</label>
+                <input type="text" id="city" placeholder="Your city" />
+              </div>
+          </div>
+          <div class="input-group">
+              <label for="allergies">Known Allergies</label>
+              <input type="text" id="allergies" placeholder="e.g. Peanuts, Aspirin" />
+          </div>
+          <div class="input-group">
+              <label for="chronic">Chronic Conditions</label>
+              <input type="text" id="chronic" placeholder="e.g. Diabetes, Asthma" />
+          </div>
+          <div class="input-group">
+              <label for="medications">Current Medications</label>
+              <input type="text" id="medications" placeholder="e.g. Metformin" />
+          </div>
+          <div class="input-group">
+              <label>Emergency Contact</label>
+              <div class="input-row">
+                <input type="text" id="emergency_name" placeholder="Contact Name" />
+                <input type="tel" id="emergency_phone" placeholder="Contact Phone" />
+              </div>
+          </div>
+        </div>
+
+        <!-- Doctor Specific Fields -->
+        <div id="doctor-fields" style="display: none;">
+          <div class="input-group">
+            <label for="speciality">Speciality *</label>
+            <input type="text" id="speciality" placeholder="e.g. Cardiologist" />
+          </div>
+          <div class="input-row">
+            <div class="input-group">
+                <label for="licence">Medical Licence # *</label>
+                <input type="text" id="licence" placeholder="Licence Number" />
+            </div>
+            <div class="input-group">
+                <label for="experience">Experience (Years) *</label>
+                <input type="number" id="experience" placeholder="Years" min="0" />
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="qualification">Qualification *</label>
+            <input type="text" id="qualification" placeholder="e.g. MBBS, MD" />
+          </div>
+          <div class="input-group">
+            <label for="clinic_name">Clinic Name</label>
+            <input type="text" id="clinic_name" placeholder="Name of your clinic" />
+          </div>
+          <div class="input-group">
+            <label for="clinic_address">Clinic Address</label>
+            <div style="display:flex; gap:8px;">
+                <input type="text" id="clinic_address" placeholder="Full address" style="flex:1;" />
+                <button type="button" onclick="geocodeAddress()" style="padding: 0 10px; border-radius: 8px; background: #333; color: #fff; cursor: pointer; border: none;">Locate</button>
+            </div>
+          </div>
+          <div class="input-group">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <label>Clinic Location Pin</label>
+                  <button type="button" onclick="detectMyLocation()" style="font-size: 12px; color: #eb2c0a; background: none; border: 1px solid #eb2c0a; padding: 2px 8px; border-radius: 12px; cursor: pointer;">Detect My Location</button>
+              </div>
+              <div id="signup-map" style="height: 180px; border-radius: 8px; margin-top: 8px; border: 1px solid #ddd;"></div>
+              <input type="hidden" id="lat" /><input type="hidden" id="lng" />
+          </div>
+          <div class="input-row">
+            <div class="input-group">
+                <label for="fee">Consultation Fee ($)</label>
+                <input type="number" id="fee" placeholder="Amount" min="0" />
+            </div>
+            <div class="input-group">
+                <label for="available_days">Available Days</label>
+                <input type="text" id="available_days" placeholder="e.g. Mon-Fri" />
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="bio">Short Bio</label>
+            <textarea id="bio" placeholder="Tell us about yourself..." style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;"></textarea>
+          </div>
+        </div>
+        
+        <div id="signup-error" class="error-msg" style="display:none; color: #eb2c0a; margin-bottom: 10px; font-size: 14px; text-align: center;"></div>
+
+        <button type="submit" class="submit-btn" id="signup-submit-btn">Register as Patient</button>
+      </form>
+      
+      <div class="login-footer">
+        <p>Already have an account? <a href="login.html">Login</a></p>
+        <a href="index.html" class="back-link">← Back to Chat</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="notifications.js"></script>
+  <script src="signup.js?v=2"></script>
+</body>
+</html>

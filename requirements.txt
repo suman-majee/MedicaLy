@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+requests
+python-dotenv
+passlib[bcrypt]
+bcrypt
+PyJWT
+aiofiles
+sqlalchemy
+python-jose[cryptography]
+python-multipart

@@ -1,0 +1,116 @@
+{
+  "headache and nausea": [
+    {
+      "condition": "Migraine",
+      "likelihood": "Very Likely",
+      "description": "Severe head pain often triggered by light, fasting, or stress, frequently includes nausea and sensitivity to light."
+    },
+    {
+      "condition": "Tension Headache",
+      "likelihood": "Possible",
+      "description": "Mild to moderate pain from stress or posture, sometimes includes nausea."
+    },
+    {
+      "condition": "Food Poisoning",
+      "likelihood": "Less Likely",
+      "description": "Caused by contaminated food, often includes nausea, vomiting, and headache."
+    }
+  ],
+  "burning while urinating": [
+    {
+      "condition": "Urinary Tract Infection (UTI)",
+      "likelihood": "Very Likely",
+      "description": "A bacterial infection causing painful urination, frequent urges, and cloudy urine."
+    },
+    {
+      "condition": "Cystitis",
+      "likelihood": "Possible",
+      "description": "Bladder inflammation often caused by infection, leading to pain and urgency."
+    },
+    {
+      "condition": "Vaginal Yeast Infection",
+      "likelihood": "Less Likely",
+      "description": "May cause irritation or mild discomfort but not typically burning urination."
+    }
+  ],
+
+  "sore throat and fever": [
+    {
+      "condition": "Strep Throat",
+      "likelihood": "Very Likely",
+      "description": "A bacterial infection with sore throat, fever, and swollen lymph nodes."
+    },
+    {
+      "condition": "Common Cold",
+      "likelihood": "Possible",
+      "description": "A viral infection with sore throat, runny nose, and mild fever."
+    },
+    {
+      "condition": "Tonsillitis",
+      "likelihood": "Possible",
+      "description": "Inflammation of the tonsils causing throat pain and fever."
+    }
+  ],
+
+  
+  "frequent urination": [
+    {
+      "condition": "Diabetes",
+      "likelihood": "Possible",
+      "description": "High blood sugar may cause excessive urination and thirst."
+    },
+    {
+      "condition": "UTI",
+      "likelihood": "Very Likely",
+      "description": "Frequent urination with burning sensation often indicates a UTI."
+    }
+  ],
+  "diarrhea and stomach pain": [
+    {
+      "condition": "Gastroenteritis",
+      "likelihood": "Very Likely",
+      "description": "Infection of the stomach or intestines, causing diarrhea and cramping."
+    },
+    {
+      "condition": "Food Poisoning",
+      "likelihood": "Likely",
+      "description": "Ingesting contaminated food, leading to diarrhea, nausea, and vomiting."
+    }
+  ],
+  "joint stiffness in the morning": [
+    {
+      "condition": "Rheumatoid Arthritis",
+      "likelihood": "Very Likely",
+      "description": "An autoimmune condition causing morning stiffness and joint swelling."
+    },
+    {
+      "condition": "Osteoarthritis",
+      "likelihood": "Possible",
+      "description": "Wear-and-tear arthritis that causes stiffness after rest."
+    }
+  ],
+  "itchy skin and rashes": [
+    {
+      "condition": "Allergic Reaction",
+      "likelihood": "Very Likely",
+      "description": "An immune response to allergens causing skin irritation."
+    },
+    {
+      "condition": "Eczema",
+      "likelihood": "Possible",
+      "description": "A chronic skin condition with inflammation and itchiness."
+    }
+  ],
+  "shortness of breath and chest pain": [
+    {
+      "condition": "Heart Attack",
+      "likelihood": "Urgent",
+      "description": "Serious cardiac event, seek emergency care immediately."
+    },
+    {
+      "condition": "Panic Attack",
+      "likelihood": "Possible",
+      "description": "Sudden anxiety leading to chest tightness and shortness of breath."
+    }
+  ]
+}

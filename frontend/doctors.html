@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>MedicaLy - Find Nearby Doctors</title>
+      <link rel="stylesheet" href="style.css?v=3" />
+      <link rel="icon" href="assets/bot.png" />
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+      <style>
+         .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+         }
+         .doctors-layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 20px;
+            height: calc(100vh - 120px);
+         }
+         .doctors-list {
+            overflow-y: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 15px;
+         }
+         .map-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            position: relative;
+         }
+         #doctors-map {
+            width: 100%;
+            height: 100%;
+         }
+         .doctor-card {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: 0.2s;
+            border-radius: 8px;
+            margin-bottom: 10px;
+         }
+         .doctor-card:hover {
+            background: #fff5f3;
+            border-color: #eb2c0a;
+         }
+         .doctor-card h3 {
+            margin: 0 0 5px 0;
+            color: #eb2c0a;
+            font-size: 1.1rem;
+            cursor: pointer;
+         }
+         .doctor-card p {
+            margin: 2px 0;
+            font-size: 0.9rem;
+            color: #555;
+         }
+         .distance-tag {
+            display: inline-block;
+            background: #eb2c0a;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 5px;
+         }
+         .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+            gap: 10px;
+         }
+
+         .action-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-top: 5px;
+         }
+         .action-btn.book {
+            background: #2e7d32;
+         }
+         .action-btn.msg {
+            background: #0066cc;
+         }
+
+         /* Booking Modal — injected dynamically by doctors.js */
+         #booking-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.55);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+         }
+         .modal-content {
+            background: white;
+            padding: 28px 24px;
+            border-radius: 16px;
+            width: 460px;
+            max-width: 95vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+         }
+         .modal-content h3 {
+            margin-top: 0;
+            color: #eb2c0a;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+         }
+         .modal-content label {
+            display: block;
+            margin: 12px 0 4px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #444;
+         }
+         .modal-content input,
+         .modal-content textarea {
+            width: 100%;
+            padding: 9px 11px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 0.95rem;
+         }
+         .modal-content input:focus,
+         .modal-content textarea:focus {
+            border-color: #0066cc;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0,102,204,0.12);
+         }
+         .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+         }
+         .available-days-hint {
+            font-size: 0.8rem;
+            color: #2e7d32;
+            font-weight: 600;
+            margin-bottom: 6px;
+         }
+         .date-error-msg {
+            font-size: 0.8rem;
+            color: #c62828;
+            margin-top: 4px;
+            display: none;
+         }
+         .time-slots-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+         }
+         .time-slot-btn {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1.5px solid #0066cc;
+            background: white;
+            color: #0066cc;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-weight: 500;
+         }
+         .time-slot-btn:hover:not(:disabled) {
+            background: #0066cc;
+            color: white;
+         }
+         .time-slot-btn.selected {
+            background: #0066cc;
+            color: white;
+         }
+         .time-slot-btn:disabled {
+            background: #f0f0f0;
+            border-color: #ccc;
+            color: #999;
+            cursor: not-allowed;
+            text-decoration: line-through;
+         }
+         #time-slots-section {
+            display: none;
+         }
+      </style>
+   </head>
+   <body style="display: block; background: #f9f9fb; height: auto">
+      <div class="chat-header" style="background: #eb2c0a; margin-bottom: 0">
+         <div class="header-left">
+            <img src="assets/logo.png" alt="Logo" class="logo" style="height: 40px" />
+            <h1 style="font-size: 1.5rem; color: white">Nearby Doctors</h1>
+         </div>
+         <div class="header-right">
+            <a href="index.html" class="login-btn" style="background: white; color: #eb2c0a; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-weight: 600;">Back to Chat</a>
+         </div>
+      </div>
+
+      <div class="container">
+         <div style="margin: 20px 0; display: flex; justify-content: space-between; align-items: center;">
+            <p id="status-text">Detecting your location to find the best care...</p>
+            <button onclick="detectLocation()" class="login-btn" style="background: #333; color: white; border: none; cursor: pointer;">Refresh Location</button>
+         </div>
+
+         <div class="doctors-layout">
+            <div class="doctors-list" id="doctors-list">
+               <!-- Cards will be injected here -->
+               <p style="text-align: center; color: #777; margin-top: 50px">Please allow location access to see doctors near you.</p>
+            </div>
+            <div class="map-container">
+               <div id="doctors-map"></div>
+               <div id="map-loader" class="loading-overlay" style="display: none">
+                  <div class="loader-spinner"></div>
+                  <p>Searching for doctors...</p>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <!-- NOTE: Booking modal is injected dynamically by doctors.js — NOT hardcoded here -->
+
+      <script src="notifications.js"></script>
+      <script src="doctors.js?v=4"></script>
+   </body>
+</html>

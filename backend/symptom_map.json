@@ -1,0 +1,138 @@
+{
+  "burning sensation during urination": [
+    {
+      "condition": "Urinary Tract Infection (UTI)",
+      "likelihood": "Very Likely",
+      "description": "A bacterial infection causing painful and frequent urination."
+    },
+    {
+      "condition": "Cystitis",
+      "likelihood": "Possible",
+      "description": "Inflammation of the bladder leading to discomfort and urgency."
+    },
+    {
+      "condition": "Vaginal Yeast Infection",
+      "likelihood": "Less Likely",
+      "description": "Fungal infection with irritation, not usually painful urination."
+    }
+  ],
+  "headache and nausea": [
+    {
+      "condition": "Migraine",
+      "likelihood": "Very Likely",
+      "description": "Severe headache often with nausea or light sensitivity."
+    },
+    {
+      "condition": "Tension Headache",
+      "likelihood": "Possible",
+      "description": "Mild to moderate headache caused by stress or posture."
+    },
+    {
+      "condition": "Food Poisoning",
+      "likelihood": "Less Likely",
+      "description": "Digestive upset from contaminated food, can include headache."
+    }
+  ],
+  "fever and cough": [
+    {
+      "condition": "Common Cold",
+      "likelihood": "Very Likely",
+      "description": "Viral infection causing runny nose, cough, and mild fever."
+    },
+    {
+      "condition": "Influenza (Flu)",
+      "likelihood": "Possible",
+      "description": "A viral illness with high fever, body aches, and dry cough."
+    },
+    {
+      "condition": "COVID-19",
+      "likelihood": "Possible",
+      "description": "Viral infection with cough, fever, loss of taste/smell."
+    }
+  ],
+  "chest pain": [
+    {
+      "condition": "Angina",
+      "likelihood": "Very Likely",
+      "description": "Chest pain due to reduced blood flow to the heart."
+    },
+    {
+      "condition": "Heart Attack (Myocardial Infarction)",
+      "likelihood": "Possible",
+      "description": "Serious heart condition with crushing chest pain and shortness of breath."
+    },
+    {
+      "condition": "Acid Reflux",
+      "likelihood": "Less Likely",
+      "description": "Burning sensation due to stomach acid in the esophagus."
+    }
+  ],
+  "abdominal pain and diarrhea": [
+    {
+      "condition": "Gastroenteritis",
+      "likelihood": "Very Likely",
+      "description": "Intestinal infection causing diarrhea, cramps, and vomiting."
+    },
+    {
+      "condition": "Food Poisoning",
+      "likelihood": "Possible",
+      "description": "Caused by contaminated food; includes nausea, cramps, diarrhea."
+    },
+    {
+      "condition": "Irritable Bowel Syndrome (IBS)",
+      "likelihood": "Less Likely",
+      "description": "Functional bowel disorder causing discomfort and irregular stool."
+    }
+  ],
+  "itchy skin and rashes": [
+    {
+      "condition": "Allergic Dermatitis",
+      "likelihood": "Very Likely",
+      "description": "Skin inflammation due to contact with allergens."
+    },
+    {
+      "condition": "Eczema",
+      "likelihood": "Possible",
+      "description": "Chronic skin condition causing itchy, dry patches."
+    },
+    {
+      "condition": "Scabies",
+      "likelihood": "Less Likely",
+      "description": "Parasitic skin infection causing severe itching, often at night."
+    }
+  ],
+  "sore throat": [
+    {
+      "condition": "Pharyngitis",
+      "likelihood": "Very Likely",
+      "description": "Inflammation of the throat often from viral infection."
+    },
+    {
+      "condition": "Strep Throat",
+      "likelihood": "Possible",
+      "description": "Bacterial infection with sore throat, fever, and white patches."
+    },
+    {
+      "condition": "Tonsillitis",
+      "likelihood": "Possible",
+      "description": "Inflamed tonsils from viral or bacterial causes."
+    }
+  ],
+  "joint pain and stiffness": [
+    {
+      "condition": "Osteoarthritis",
+      "likelihood": "Very Likely",
+      "description": "Degenerative joint disease causing stiffness and pain."
+    },
+    {
+      "condition": "Rheumatoid Arthritis",
+      "likelihood": "Possible",
+      "description": "Autoimmune condition affecting joints symmetrically."
+    },
+    {
+      "condition": "Lupus",
+      "likelihood": "Less Likely",
+      "description": "Autoimmune disease with systemic symptoms including joint pain."
+    }
+  ]
+}

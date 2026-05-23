@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedicaLy</title>
+  <link rel="stylesheet" href="style.css?v=2" />
+  <link rel="icon" href="assets/bot.png" />
+</head>
+<body>
+
+  <div class="main-layout" style="display: flex; height: 100vh; overflow: hidden;">
+    <!-- Sidebar for Chat History -->
+    <div id="history-sidebar" style="display:none; width:250px; background:#f4f4f4; border-right:1px solid #ddd; padding:15px; overflow-y:auto; flex-shrink: 0;">
+      <h3>Chat History</h3>
+      <div id="history-list"></div>
+    </div>
+
+    <!-- Main Chat Container -->
+    <div class="chat-container" style="flex: 1; max-width: none; border-radius: 0; box-shadow: none;">
+      <div class="chat-header">
+        <div class="header-left" style="display: flex; align-items: center; gap: 10px;">
+          <button id="toggle-sidebar-btn" style="display:none; background:none; border:none; font-size:20px; cursor:pointer;">☰</button>
+          <img src="assets/logo.png" alt="MedicaLy" class="logo" />
+          <h1>MedicaLy</h1>
+          <button onclick="newChat()" style="background:none; border:1.5px solid rgba(255,255,255,0.7); color:white; padding:4px 12px; border-radius:20px; cursor:pointer; font-size:0.85rem; font-weight:600;">+ New Chat</button>
+        </div>
+        <div class="header-right" id="header-actions">
+          <a href="login.html" class="login-btn">Login</a>
+        </div>
+      </div>
+
+      <div id="chat-box" class="chat-box">
+        <!-- Messages will appear here -->
+      </div>
+
+      <!-- Guest Banner — shown above input for non-logged-in users -->
+      <div id="guest-banner" style="display:none; background:#fff8e1; border:0.5px solid #ffe082; border-radius:8px; padding:8px 16px; font-size:13px; color:#5d4037; margin:0 1rem 4px; align-items:center; justify-content:space-between; gap:12px;">
+        <span>Log in to save your chat history and get personalized AI responses.</span>
+        <a href="/login.html" style="font-size:13px; font-weight:500; color:#0b7285; white-space:nowrap; text-decoration:none;">Log in →</a>
+      </div>
+      <form id="chat-form" class="chat-form">
+        <input type="text" id="user-input" placeholder="Describe your symptoms..." autocomplete="off" />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="notifications.js"></script>
+  <script src="script.js?v=3"></script>
+</body>
+</html>

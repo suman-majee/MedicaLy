@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedicaLy — My Profile</title>
+  <meta name="description" content="Manage your MedicaLy profile, view appointments and medical information." />
+  <link rel="icon" href="assets/bot.png" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="profile.css?v=4" />
+</head>
+<body>
+<div class="profile-page">
+
+  <!-- Top Bar -->
+  <div class="profile-topbar">
+    <div class="logo-area">
+      <img src="assets/logo.png" alt="MedicaLy" class="logo" />
+      <h1>My Profile</h1>
+    </div>
+    <nav class="nav-links">
+      <a href="chat-doctor.html" class="topbar-link">💬 Messages</a>
+      <a href="index.html" class="topbar-link back">← Back to Chat</a>
+    </nav>
+  </div>
+
+  <!-- Reminder Banner (patient upcoming appointment — injected by JS) -->
+  <div id="reminder-banner" style="display:none; padding: 0 28px; max-width:1200px; margin:16px auto 0; width:100%;"></div>
+
+  <!-- Status message (form save result) -->
+  <div style="max-width:1200px; margin:0 auto; padding:0 28px; width:100%;">
+    <div id="status-msg" class="status-msg"></div>
+  </div>
+
+  <div class="profile-body">
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="profile-sidebar">
+      <!-- Avatar + Info Card -->
+      <div class="sidebar-card">
+        <div id="sidebar-avatar" class="avatar-circle patient">?</div>
+        <div id="sidebar-name" class="sidebar-name">Loading...</div>
+        <div id="sidebar-role-badge" class="role-badge patient">Patient</div>
+        <div id="sidebar-email" class="sidebar-email"></div>
+        <div id="sidebar-pills" class="sidebar-pills"></div>
+      </div>
+
+      <!-- Doctor Stats Card (doctors only, hidden by default) -->
+      <div id="doctor-stats-card" class="stats-card" style="display:none;">
+        <div class="stats-title">📊 Practice Overview</div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span id="stat-patients" class="stat-number">—</span>
+            <span class="stat-label">Total Patients</span>
+          </div>
+          <div class="stat-item">
+            <span id="stat-pending" class="stat-number pending">—</span>
+            <span class="stat-label">Pending</span>
+          </div>
+          <div class="stat-item">
+            <span id="stat-rating" class="stat-number rating">—</span>
+            <span class="stat-label">Avg Rating</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ===================== CONTENT ===================== -->
+    <main class="profile-content">
+
+      <form id="profile-form">
+
+        <!-- ---- CARD 1: Account Information (both roles) ---- -->
+        <div class="profile-card">
+          <div class="card-title">Account Information</div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="p-name" required placeholder="Your full name" />
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" id="p-phone" placeholder="+91 XXXXX XXXXX" />
+            </div>
+            <div class="form-group">
+              <label>Email Address <span class="lock-icon">🔒</span></label>
+              <input type="email" id="p-email" class="readonly" readonly placeholder="your@email.com" />
+            </div>
+            <div class="form-group">
+              <label>Account Role</label>
+              <input type="text" id="p-role" class="readonly" readonly />
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================
+             PATIENT-ONLY CARDS
+             ============================================ -->
+        <div id="p-patient-section" style="display:none;">
+
+          <!-- Card 2: Medical Information -->
+          <div class="profile-card">
+            <div class="card-title">Medical Information</div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Date of Birth</label>
+                <input type="date" id="p-dob" />
+              </div>
+              <div class="form-group">
+                <label>Gender</label>
+                <select id="p-gender">
+                  <option value="">Select gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Blood Group</label>
+                <input type="text" id="p-blood" placeholder="e.g. O+" />
+              </div>
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" id="p-city" placeholder="Your city" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Health Details -->
+          <div class="profile-card">
+            <div class="card-title">Health Details</div>
+            <div class="form-grid-2 full">
+              <div class="form-group">
+                <label>Known Allergies</label>
+                <input type="text" id="p-allergies" placeholder="e.g. Penicillin, Peanuts" />
+              </div>
+              <div class="form-group">
+                <label>Chronic Conditions</label>
+                <input type="text" id="p-chronic" placeholder="e.g. Diabetes, Hypertension" />
+              </div>
+              <div class="form-group">
+                <label>Current Medications</label>
+                <input type="text" id="p-medications" placeholder="e.g. Metformin 500mg" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Emergency Contact -->
+          <div class="profile-card">
+            <div class="card-title">Emergency Contact</div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Contact Name</label>
+                <input type="text" id="p-emergency-name" placeholder="Full name" />
+              </div>
+              <div class="form-group">
+                <label>Contact Phone</label>
+                <input type="tel" id="p-emergency-phone" placeholder="+91 XXXXX XXXXX" />
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end patient section -->
+
+        <!-- ============================================
+             DOCTOR-ONLY CARDS
+             ============================================ -->
+        <div id="p-doctor-section" style="display:none;">
+
+          <!-- Card 2: Professional Details -->
+          <div class="profile-card">
+            <div class="card-title">Professional Details</div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Speciality</label>
+                <input type="text" id="p-speciality" placeholder="e.g. Cardiologist" />
+              </div>
+              <div class="form-group">
+                <label>Medical Licence # <span class="lock-icon">🔒</span></label>
+                <input type="text" id="p-licence" class="readonly" readonly placeholder="Locked" />
+              </div>
+              <div class="form-group">
+                <label>Experience (Years)</label>
+                <input type="number" id="p-experience" placeholder="0" min="0" max="60" />
+              </div>
+              <div class="form-group">
+                <label>Qualification</label>
+                <input type="text" id="p-qualification" placeholder="e.g. MBBS, MD" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Clinic Information -->
+          <div class="profile-card">
+            <div class="card-title">Clinic Information</div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Clinic Name</label>
+                <input type="text" id="p-clinic-name" placeholder="Your clinic name" />
+              </div>
+              <div class="form-group">
+                <label>Consultation Fee (₹)</label>
+                <input type="number" id="p-fee" placeholder="0" min="0" />
+              </div>
+              <div class="form-group span-2">
+                <label>Clinic Address</label>
+                <div class="input-with-btn">
+                  <input type="text" id="p-clinic-address" placeholder="Full clinic address" />
+                  <button type="button" class="map-btn" onclick="geocodeAddress()">📍 Point on Map</button>
+                </div>
+              </div>
+              <div class="form-group span-2">
+                <label>Available Days <span style="font-size:0.7rem; color:#888; text-transform:none; font-weight:400;">(click to toggle)</span></label>
+                <div class="day-toggles" id="day-toggles">
+                  <button type="button" class="day-toggle" data-day="Mon">Mon</button>
+                  <button type="button" class="day-toggle" data-day="Tue">Tue</button>
+                  <button type="button" class="day-toggle" data-day="Wed">Wed</button>
+                  <button type="button" class="day-toggle" data-day="Thu">Thu</button>
+                  <button type="button" class="day-toggle" data-day="Fri">Fri</button>
+                  <button type="button" class="day-toggle" data-day="Sat">Sat</button>
+                  <button type="button" class="day-toggle" data-day="Sun">Sun</button>
+                </div>
+                <input type="hidden" id="p-days" />
+              </div>
+              <div class="form-group span-2">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                  <label style="margin-bottom:0;">Clinic Location Pin</label>
+                  <button type="button" class="map-btn" style="padding:4px 12px; font-size:0.78rem;" onclick="detectMyLocation()">📡 Detect My Location</button>
+                </div>
+                <div id="profile-map"></div>
+                <input type="hidden" id="lat" /><input type="hidden" id="lng" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: About -->
+          <div class="profile-card">
+            <div class="card-title">About</div>
+            <div class="form-group">
+              <label>Short Bio</label>
+              <textarea id="p-bio" rows="4" placeholder="Tell patients about your background, areas of expertise, and approach to care..."></textarea>
+            </div>
+          </div>
+
+        </div><!-- end doctor section -->
+
+      </form><!-- end profile-form -->
+
+      <!-- Save Button (outside cards) -->
+      <div class="save-btn-wrap">
+        <button type="submit" form="profile-form" class="save-btn" id="save-btn">Update Profile</button>
+      </div>
+
+      <!-- ============================================
+           CARD 5: My Appointments (both roles)
+           ============================================ -->
+      <div class="profile-card">
+        <div class="card-title">My Appointments</div>
+        <div id="appointments-list" class="appointments-list">
+          <div class="empty-state">Loading appointments...</div>
+        </div>
+      </div>
+
+      <!-- My Prescriptions Section (Patients Only) -->
+      <div id="patient-prescriptions-section" style="display:none;">
+        <div class="profile-card">
+          <div class="card-title">My Prescriptions</div>
+          <div id="prescriptions-list" class="appointments-list"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="notifications.js"></script>
+<script src="profile.js?v=4"></script>
+</body>
+</html>

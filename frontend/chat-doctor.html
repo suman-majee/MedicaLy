@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MedicaLy - Private Messages</title>
+  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="icon" href="assets/bot.png">
+  <style>
+    body { background: #f9f9fb; margin: 0; display: flex; height: 100vh; flex-direction: column; font-size: 14px; }
+    .nav-bar { background: #eb2c0a; padding: 10px 20px; width:50%; display: flex; justify-content: space-between; align-items: center; color: white; flex-shrink: 0; }
+    .nav-bar a { color: white; text-decoration: none; font-weight: bold; background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 24px; }
+    .nav-bar a.back-btn { background: white; color: #eb2c0a; margin-left: 15px; font-size: 14px; }
+    
+    .chat-layout { display: flex; flex: 1; overflow: hidden; max-width: 1200px; margin: 0 auto; width: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.1); background: white; }
+    
+    .sidebar { width: 230px; border-right: 1px solid #ddd; display: flex; flex-direction: column; background: #fff; flex-shrink: 0; }
+    .sidebar-header { padding: 15px; border-bottom: 1px solid #ddd; font-weight: bold; font-size: 15px; background: #f9f9fb; }
+    .contacts-list { flex: 1; overflow-y: auto; }
+    .contact-item { padding: 12px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; border-left: 3px solid transparent; }
+    .contact-item:hover { background: #f5f5f5; }
+    .contact-item.active { background: #e8f4f8; border-left: 3px solid #0b7285; }
+    .contact-info { display: flex; flex-direction: column; gap: 4px; }
+    .contact-name { font-weight: bold; color: #333; font-size: 15px; }
+    .contact-preview { font-size: 13px; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+    .unread-badge { background: #0b7285; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; font-weight: bold; }
+    
+    .chat-area { flex: 1; display: flex; flex-direction: column; background: #f9f9fb; }
+    .chat-header { padding: 15px 20px; background: white; border-bottom: 1px solid #ddd; font-weight: bold; font-size: 15px; color: #eb2c0a; display: flex; align-items: center; }
+    .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+    
+    .msg-bubble { max-width: 70%; padding: 10px 15px; border-radius: 15px; font-size: 14px; line-height: 1.4; position: relative; }
+    .msg-sent { align-self: flex-end; background: #0b7285; color: white; border-bottom-right-radius: 2px; }
+    .msg-received { align-self: flex-start; background: #ffffff; border: 0.5px solid #e0e0e0; color: #1a1a1a; border-bottom-left-radius: 2px; }
+    .msg-time { font-size: 11px; opacity: 0.6; margin-top: 5px; text-align: right; display: block; }
+    
+    .chat-input-area { padding: 15px; background: white; border-top: 1px solid #ddd; }
+    .chat-form { display: flex; gap: 10px; }
+    .chat-form input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 24px; outline: none; font-size: 14px; }
+    .chat-form input:focus { border-color: #eb2c0a; }
+    .chat-form button { background: #0b7285; color: white; border: none; padding: 0 20px; border-radius: 24px; cursor: pointer; font-weight: bold; }
+    
+    .no-chat-selected { flex: 1; display: flex; justify-content: center; align-items: center; color: #777; font-size: 15px; flex-direction: column; gap: 10px; }
+  </style>
+</head>
+<body>
+  <div class="nav-bar">
+    <div style="display:flex; align-items:center; gap:10px;">
+        <img src="assets/logo.png" alt="Logo" style="height:30px;">
+        <h2 style="margin:0; font-size:1.2rem;">MedicaLy Messages</h2>
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+    <div style="display:flex; gap:10px;">
+        <a href="index.html">AI Chat</a>
+        <a href="profile.html">Profile</a>
+    </div>
+  </div>
+
+  <div class="chat-layout">
+    <div class="sidebar">
+      <div class="sidebar-header">Recent Contacts</div>
+      <div class="contacts-list" id="contacts-list">
+        <!-- Contacts injected here -->
+      </div>
+    </div>
+    
+    <div class="chat-area" id="chat-area" style="display:none;">
+      <div class="chat-header" id="chat-contact-name">Select a contact</div>
+      <div class="chat-messages" id="chat-messages">
+        <!-- Messages injected here -->
+      </div>
+      <div class="chat-input-area">
+        <form class="chat-form" id="chat-form">
+          <input type="text" id="msg-input" placeholder="Type a message..." autocomplete="off" required>
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </div>
+    
+    <div class="no-chat-selected" id="no-chat-selected">
+        <img src="assets/bot.png" alt="Bot" style="width:50px; opacity:0.5;">
+        <p>Select a contact from the sidebar to start messaging.</p>
+    </div>
+  </div>
+
+  <script src="notifications.js"></script>
+  <script src="chat-doctor.js?v=1"></script>
+</body>
+</html>
